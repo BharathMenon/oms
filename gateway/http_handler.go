@@ -1,6 +1,10 @@
 package main
-import ("net/http"
-pb "github.com/BharathMenon/commons/api"
+
+import (
+	"net/http"
+
+	"github.com/BharathMenon/commons"
+	pb "github.com/BharathMenon/commons/api"
 )
 type handler struct{
 	client pb.OrderServiceClient 
@@ -16,8 +20,13 @@ func (h *handler) registerRoutes(mux *http.ServeMux){
 
 func (h * handler) HandleCreateOrder(w http.ResponseWriter,r *http.Request){
 	customerID:=r.PathValue("customerID")
+	var items []*pb.ItemsWithQuantity
+	if err:=commons.ReadJSON(r,&items);err!=nil{
+		commons.WriteError(w,http.StatusBadRequest,err.Error())
+		return 
+	}
 	h.client.CreateOrder(r.Context(),&pb.CreateOrderRequest{
 		CustomerID: customerID,
-		
+		Items: items,
 	})
 }

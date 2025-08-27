@@ -20,7 +20,7 @@ func main(){
 	if err!=nil{
 		log.Fatalf("Failed to dial server: %v",err)
 	}
-	defer conn.Close()
+	defer conn.Close() 
 	log.Println("Dialing orders service at ",orderServiceaddr)
 	c := pb.NewOrderServiceClient(conn)
 	mux := http.NewServeMux()
